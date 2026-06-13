@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log/slog"
 
-	"github.com/DoMinhHHung/Rental/notify-service/internal/domain"
-	"github.com/DoMinhHHung/Rental/notify-service/internal/infrastructure/config"
+	"github.com/DoMinhHHung/Bee/notify-service/internal/domain"
+	"github.com/DoMinhHHung/Bee/notify-service/internal/infrastructure/config"
 	amqp "github.com/rabbitmq/amqp091-go"
 )
 
@@ -166,13 +166,13 @@ func (c *Consumer) processMessage(ctx context.Context, d amqp.Delivery) {
 	err := c.handler(ctx, req)
 	if err != nil {
 		c.logger.Error("failed to handle message", "error", err, "email", req.Email)
-		
+
 		// Simple retry logic: if x-death count < 3, requeue. Otherwise, send to DLQ.
 		// For simplicity in Phase 1, we can use a basic Nack without requeue for fatal errors,
 		// and RabbitMQ's DLX will handle it.
 		// If we want actual retries with delay, we'd need a more complex setup.
 		// Here we'll just nack without requeue if it fails, which moves it to DLQ.
-		d.Nack(false, false) 
+		d.Nack(false, false)
 		return
 	}
 

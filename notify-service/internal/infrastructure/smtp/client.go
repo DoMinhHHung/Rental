@@ -4,9 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net/smtp"
-	"github.com/DoMinhHHung/Rental/notify-service/internal/application/port"
-	"github.com/DoMinhHHung/Rental/notify-service/internal/domain"
-	"github.com/DoMinhHHung/Rental/notify-service/internal/infrastructure/config"
+
+	"github.com/DoMinhHHung/Bee/notify-service/internal/application/port"
+	"github.com/DoMinhHHung/Bee/notify-service/internal/domain"
+	"github.com/DoMinhHHung/Bee/notify-service/internal/infrastructure/config"
 )
 
 type smtpClient struct {
@@ -19,7 +20,7 @@ func NewSmtpClient(cfg *config.Config) port.EmailSender {
 
 func (s *smtpClient) SendOtpEmail(ctx context.Context, req domain.EmailOtpRequest) error {
 	auth := smtp.PlainAuth("", s.config.SmtpUser, s.config.SmtpPass, s.config.SmtpHost)
-	
+
 	to := []string{req.Email}
 	msg := []byte(fmt.Sprintf("To: %s\r\n"+
 		"Subject: Your OTP Code\r\n"+

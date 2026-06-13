@@ -1,31 +1,39 @@
-version: '3.8'
+version: "3.9"
 
 services:
-  notify-service:
-    build: .
-    ports:
-      - "8081:8081"
-    environment:
-      - APP_PORT=8081
-      - SMTP_HOST=smtp.gmail.com
-      - SMTP_PORT=587
-      - SMTP_USER=your-email@gmail.com
-      - SMTP_PASS=your-app-password
-      - SMTP_FROM=your-email@gmail.com
-      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
-      - RABBITMQ_EXCHANGE=email_otp_exchange
-      - RABBITMQ_QUEUE=email_otp_queue
-      - RABBITMQ_ROUTING_KEY=email.otp.requested
-      - RABBITMQ_DLX=email_otp_dlx
-      - RABBITMQ_DLQ=email_otp_dlq
-    depends_on:
-      - rabbitmq
-
   rabbitmq:
-    image: rabbitmq:3-management
+    image: rabbitmq:4-management
+    container_name: rabbitmq
+    restart: unless-stopped
     ports:
       - "5672:5672"
       - "15672:15672"
     environment:
-      - RABBITMQ_DEFAULT_USER=guest
-      - RABBITMQ_DEFAULT_PASS=guest
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - rental-network
+
+  notify-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: notify-service
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    depends_on:
+      - rabbitmq
+    networks:
+      - rental-network
+
+volumes:
+  rabbitmq_data:
+
+networks:
+  rental-network:
+    driver: bridge

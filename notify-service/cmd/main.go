@@ -10,7 +10,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/DoMinhHHung/Rental/notify-service/internal/interface/di"
+	"github.com/DoMinhHHung/Bee/notify-service/internal/interface/di"
 )
 
 func main() {

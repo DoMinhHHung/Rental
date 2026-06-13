@@ -2,7 +2,8 @@ package port
 
 import (
 	"context"
-	"github.com/DoMinhHHung/Rental/notify-service/internal/domain"
+
+	"github.com/DoMinhHHung/Bee/notify-service/internal/domain"
 )
 
 type EmailSender interface {

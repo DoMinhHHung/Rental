@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
-	"github.com/DoMinhHHung/Rental/notify-service/internal/application/port"
-	"github.com/DoMinhHHung/Rental/notify-service/internal/domain"
+
+	"github.com/DoMinhHHung/Bee/notify-service/internal/application/port"
+	"github.com/DoMinhHHung/Bee/notify-service/internal/domain"
 )
 
 type SendEmailOtpUseCase struct {
